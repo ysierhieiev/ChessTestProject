@@ -48,6 +48,23 @@ void ACTPPawnBase::BeginPlay()
 	}
 }
 
+bool ACTPPawnBase::CompareBorders(int CompareIndex, int A, int B)
+{
+	if(CompareIndex > 3)
+	{
+		CompareIndex -= 4;
+	}
+	switch(CompareIndex)
+	{
+	case 0: return (A < 8 && B < 8); 
+	case 1: return (0 <= A && 0 <= B);
+	case 2: return (A < 8 && 0 <= B); 
+	case 3: return (0 <= A && B < 8); 
+	default: return false;
+	}
+	return false;
+}
+
 void ACTPPawnBase::SetDefaultValues(ACTPBoard* Board, UCTPBoardPiece* Piece, bool isWhiteFigure)
 {
 	ChessBoard = Board;
@@ -65,9 +82,42 @@ void ACTPPawnBase::SetCurrentPiece(UCTPBoardPiece* NewPiece)
 	CurrentPiece = NewPiece;
 }
 
-TArray<UCTPBoardPiece*> ACTPPawnBase::GetAvailableMoves()
+TArray<UCTPBoardPiece*> ACTPPawnBase::GetAvailableMoves(bool HighlightPieces)
 {
 	return {};
+}
+
+TArray<UCTPBoardPiece*> ACTPPawnBase::GetAvailableCheckMoves(TArray<UCTPBoardPiece*> AvailableCheckPieces, bool HighlightPieces)
+{
+	auto Moves = GetAvailableMoves();
+	TArray<UCTPBoardPiece*> AvailableMoves;
+	for (auto& Pieces : AvailableCheckPieces)
+	{
+		for (auto& Move : Moves)
+		{
+			if(Move == Pieces)
+			{
+				AvailableMoves.Add(Move);				
+			}
+		}
+	}
+
+	if( AvailableMoves.Num() && HighlightPieces)
+	{
+		for (auto& Move : AvailableMoves)
+		{
+			if (Move->GetCurrentFigure())
+			{
+				Move->EnemyHighlightPiece();
+			}
+			else
+			{
+				Move->HighlightPiece();
+			}
+		}
+	}
+	
+	return AvailableMoves;
 }
 
 void ACTPPawnBase::MoveTo(UCTPBoardPiece* TargetPiece)
@@ -84,7 +134,6 @@ void ACTPPawnBase::MoveTo(UCTPBoardPiece* TargetPiece)
 		else
 		{
 			ChessBoard->GetBlackChessmen().Remove(TargetPiece->GetCurrentFigure());
-			UE_LOG(LogTemp, Warning, TEXT("%i"), ChessBoard->GetBlackChessmen().Num());
 		}
 		TargetPiece->GetCurrentFigure()->Destroy();
 	}
@@ -98,4 +147,9 @@ void ACTPPawnBase::MoveTo(UCTPBoardPiece* TargetPiece)
 	}
 	default:;
 	}
+}
+
+TArray<UCTPBoardPiece*> ACTPPawnBase::GetPathTo(UCTPBoardPiece* TargetPiece)
+{
+	return {};
 }

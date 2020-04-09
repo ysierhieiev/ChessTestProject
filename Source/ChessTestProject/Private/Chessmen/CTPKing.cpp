@@ -14,7 +14,7 @@ ACTPKing::ACTPKing()
 	FigureScore = 900;
 }
 
-TArray<UCTPBoardPiece*> ACTPKing::GetAvailableMoves()
+TArray<UCTPBoardPiece*> ACTPKing::GetAvailableMoves(bool  HighlightPieces)
 {
 	TArray<FGridRows> BoardGridOfRows = ChessBoard->GetBoardPieces();
 	TArray<UCTPBoardPiece*> AvailableMoves;
@@ -31,14 +31,18 @@ TArray<UCTPBoardPiece*> ACTPKing::GetAvailableMoves()
 				if (BoardGridOfRows[Coord.X + i][Coord.Y + j]->GetCurrentFigure()->GetIsWhiteColor() != isWhite)
 				{
 					AvailableMoves.Add(BoardGridOfRows[Coord.X + i][Coord.Y + j]);
-					if (isWhite)
-					BoardGridOfRows[Coord.X + i][Coord.Y + j]->EnemyHighlightPiece();
+					if (HighlightPieces)
+					{
+						BoardGridOfRows[Coord.X + i][Coord.Y + j]->EnemyHighlightPiece();
+					}
 				}
 			}
 			else if(BoardGridOfRows[Coord.X + i][Coord.Y + j]->GetCurrentState() == EPieceState::CS_Empty)
 			{
-				if (isWhite)
-				BoardGridOfRows[Coord.X + i][Coord.Y + j]->HighlightPiece();
+				if (HighlightPieces)
+				{
+					BoardGridOfRows[Coord.X + i][Coord.Y + j]->HighlightPiece();
+				}
 				AvailableMoves.Add(BoardGridOfRows[Coord.X + i][Coord.Y + j]);
 			}		
 		}		
@@ -46,13 +50,36 @@ TArray<UCTPBoardPiece*> ACTPKing::GetAvailableMoves()
 	return AvailableMoves;
 }
 
+TArray<UCTPBoardPiece*> ACTPKing::GetPathTo(UCTPBoardPiece* TargetPiece)
+{
+	TArray<UCTPBoardPiece*> ReturnPieces;
+	ReturnPieces.Add(GetCurrentPiece());
+	return ReturnPieces;
+}
+
+TArray<UCTPBoardPiece*> ACTPKing::GetAvailableCheckMoves(TArray<UCTPBoardPiece*> AvailableCheckPieces, bool HighlightPieces)
+{
+	return GetAvailableMoves(HighlightPieces);
+}
+
 void ACTPKing::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	auto GameMode = Cast<ACTPGameModePlayerVSAI>(UGameplayStatics::GetGameMode(GetWorld()));
-	if(GameMode)
+	if (EndPlayReason == EEndPlayReason::Destroyed)
 	{
-		GameMode->CompleteGame(!isWhite);
+		auto GameMode = Cast<ACTPGameModePlayerVSAI>(UGameplayStatics::GetGameMode(GetWorld()));
+		if (GameMode)
+		{
+			if(isWhite)
+			{
+				GameMode->CompleteGame(ECompleteGameState::CGS_BlackWin);
+			}
+			else
+			{
+				GameMode->CompleteGame(ECompleteGameState::CGS_WhiteWin);
+			}
+			
+		}
 	}
 }

@@ -28,7 +28,7 @@ protected:
 	EControllerState CurrentState = EControllerState::CS_Free;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "PlayerController")
-	ACTPBoard* CurrentBoard;
+	ACTPBoard* GameBoard;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PlayerController")
 	ACTPGameModePlayerVSAI* ChessGameMode;
@@ -39,11 +39,12 @@ protected:
 
 	bool bPlayerCanMove = true;
 	
+	TArray<UCTPBoardPiece*> AvailableCheckMoves;
 public:
 
 	void BeginPlay() override;
 
-	void PlayerMove();
+	void PlayerMove(TArray<UCTPBoardPiece*> NewAvailableCheckMoves);
 	
 	FORCEINLINE EControllerState GetCurrentState() { return CurrentState; }
 	
@@ -54,6 +55,5 @@ public:
 	void OnLeftMousePressed();
 	
 	void OnLeftMouseReleased();
-	
-	void OnRightMouseClick();
+
 };

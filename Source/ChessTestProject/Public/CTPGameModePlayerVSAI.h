@@ -6,8 +6,24 @@
 #include "CTPGameMode.h"
 #include "CTPGameModePlayerVSAI.generated.h"
 
+UENUM(BlueprintType)
+enum class ECompleteGameState : uint8
+{
+	CGS_WhiteWin = 0 		UMETA(DisplayName = "WhiteWin"),
+	CGS_BlackWin			UMETA(DisplayName = "BlackWin"),
+	CGS_Stalemate			UMETA(DisplayName = "Stalemate")};
+
+UENUM(BlueprintType)
+enum class EGameState : uint8
+{
+	GS_Play = 0 			UMETA(DisplayName = "Play"),
+	GS_Check				UMETA(DisplayName = "Check"),
+	GS_Mat					UMETA(DisplayName = "Mat")
+};
+
+
 //Create an event to alert the end of the game and create a widget
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameCompleteSignature, bool, isWhiteWin);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGameCompleteSignature, ECompleteGameState, isWhiteWin);
 
 class ACTPBoard;
 class ACTPPlayerController;
@@ -54,7 +70,7 @@ struct FAIMove
 				BestMoveIndex = i;
 			}
 		}
-		return MaxScore;
+		return (MaxScore - (CurrentFigure->GetFigureScore()/2));
 	}
 
 	void Move()
@@ -64,10 +80,17 @@ struct FAIMove
 	
 	FAIMove() {}
 	
-	FAIMove(ACTPPawnBase* NewCurrentFigure)
+	FAIMove(ACTPPawnBase* NewCurrentFigure, TArray<UCTPBoardPiece*> AvailableCheckMoves)
 	{
 		CurrentFigure = NewCurrentFigure;
-		AvailableMoves = CurrentFigure->GetAvailableMoves();
+		if(AvailableCheckMoves.Num() > 0)
+		{
+			AvailableMoves = CurrentFigure->GetAvailableCheckMoves(AvailableCheckMoves);
+		}
+		else
+		{
+			AvailableMoves = CurrentFigure->GetAvailableMoves();
+		}			
 		AvailableMovesNum = AvailableMoves.Num();
 	}
 };
@@ -88,13 +111,21 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gamemode")
 	ACTPPlayerController* ChessPlayerController;
 		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gamemode")
+	EGameState CurrentGameState = EGameState::GS_Play;
+
+	TArray<UCTPBoardPiece*> IsCheck(TArray<ACTPPawnBase*>& Chessmen);
+	
 public:
+	FORCEINLINE void SetCurrentGameState(EGameState NewCurrentGameState) { CurrentGameState = NewCurrentGameState; }
+
+	FORCEINLINE EGameState GetCurrentGameState() { return CurrentGameState; }
 
 	FORCEINLINE void SetPlayerController(ACTPPlayerController* NewChessPlayerController) { ChessPlayerController = NewChessPlayerController; }
 	
 	FORCEINLINE void SetBoard(ACTPBoard* NewBoard) { GameBoard = NewBoard; }
 	
-	void CompleteGame(bool isWhiteWin);
+	void CompleteGame(ECompleteGameState CompleteState);
 
 	//Activate netx AI step
 	void MoveAI();

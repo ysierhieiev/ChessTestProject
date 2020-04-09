@@ -74,26 +74,26 @@ void ACTPBoard::SpawnChessmen()
 		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[1], GridOfRows[7][7]->GetComponentLocation() + FVector(200.f, 200.f, 190.f), FRotator::ZeroRotator));
 		BlackChessmen.Last()->SetDefaultValues(this, GridOfRows[7][7], false);
 			
-		//Spawn Bishops
-		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[0][1]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
+		//Spawn Knight
+		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[0][1]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, -90.f,0.f)));
 		WhiteChessmen.Last()->SetDefaultValues(this, GridOfRows[0][1]);
-		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[0][6]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
+		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[0][6]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, -90.f, 0.f)));
 		WhiteChessmen.Last()->SetDefaultValues(this, GridOfRows[0][6]);
-
-		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[7][1]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
+		
+		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[7][1]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, 90.f, 0.f)));
 		BlackChessmen.Last()->SetDefaultValues(this, GridOfRows[7][1], false);
-		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[7][6]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
+		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[2], GridOfRows[7][6]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, 90.f, 0.f)));
 		BlackChessmen.Last()->SetDefaultValues(this, GridOfRows[7][6], false);
 
-		//Spawn Knight
-		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[0][2]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, -90.f,0.f)));
+		//Spawn Bishops
+		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[0][2]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
 		WhiteChessmen.Last()->SetDefaultValues(this, GridOfRows[0][2]);
-		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[0][5]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, -90.f, 0.f)));
+		WhiteChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[0][5]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
 		WhiteChessmen.Last()->SetDefaultValues(this, GridOfRows[0][5]);
-		
-		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[7][2]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, 90.f, 0.f)));
+
+		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[7][2]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
 		BlackChessmen.Last()->SetDefaultValues(this, GridOfRows[7][2], false);
-		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[7][5]->GetComponentLocation() + FVector(200.f, 200.f, 90.f), FRotator::ZeroRotator + FRotator(0.f, 90.f, 0.f)));
+		BlackChessmen.Add(GetWorld()->SpawnActor<ACTPPawnBase>(BPChessmenClasses[3], GridOfRows[7][5]->GetComponentLocation() + FVector(200.f, 200.f, 0.f), FRotator::ZeroRotator));
 		BlackChessmen.Last()->SetDefaultValues(this, GridOfRows[7][5], false);
 		
 		//Spawn Queens

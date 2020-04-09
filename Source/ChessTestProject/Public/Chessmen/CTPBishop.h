@@ -13,5 +13,7 @@ public:
 	
 	ACTPBishop();
 
-	TArray<UCTPBoardPiece*> GetAvailableMoves() override;
+	TArray<UCTPBoardPiece*> GetAvailableMoves(bool HighlightPieces) override;
+
+	TArray<UCTPBoardPiece*> GetPathTo(UCTPBoardPiece* TargetPiece) override;
 };

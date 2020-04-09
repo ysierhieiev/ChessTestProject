@@ -43,6 +43,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Figure")
 	int FigureScore;
 
+	bool CompareBorders(int CompareIndex, int A = 0, int B = 0);
 public:
 
 	void SetDefaultValues(ACTPBoard* Board, UCTPBoardPiece* Piece, bool isWhiteFigure = true );
@@ -56,7 +57,11 @@ public:
 	void SetCurrentPiece(UCTPBoardPiece* NewPiece);
 
 	//Return an array of pieces to which the figure can move.
-	virtual TArray<UCTPBoardPiece*> GetAvailableMoves();
+	virtual TArray<UCTPBoardPiece*> GetAvailableMoves(bool HighlightPieces = false);
+
+	virtual TArray<UCTPBoardPiece*> GetAvailableCheckMoves(TArray<UCTPBoardPiece*> AvailableCheckPieces, bool HighlightPieces = false);
+
+	virtual void MoveTo(UCTPBoardPiece* TargetPiece);
 	
-	void MoveTo(UCTPBoardPiece* TargetPiece);
+	virtual TArray<UCTPBoardPiece*> GetPathTo(UCTPBoardPiece* TargetPiece);
 };

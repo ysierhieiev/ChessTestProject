@@ -58,8 +58,8 @@ protected:
 	/** Filling rule(If it is empty, then the classes from the source will be used):
 	 *	 1. Pawn
 	 *	2. Rook
-	 *	3. Bishop
-	 *	4. Knight
+	 *	3. Knight
+	 *	4. Bishop
 	 *	5. Queen
 	 *	6. King
 	 */

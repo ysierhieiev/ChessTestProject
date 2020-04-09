@@ -13,7 +13,11 @@ public:
 	
 	ACTPKing();
 
-	TArray<UCTPBoardPiece*> GetAvailableMoves() override;
+	TArray<UCTPBoardPiece*> GetAvailableMoves(bool HighlightPieces) override;
+
+	TArray<UCTPBoardPiece*> GetPathTo(UCTPBoardPiece* TargetPiece) override;
+
+	TArray<UCTPBoardPiece*> GetAvailableCheckMoves(TArray<UCTPBoardPiece*> AvailableCheckPieces, bool HighlightPieces = false) override;
 
 protected:
 	

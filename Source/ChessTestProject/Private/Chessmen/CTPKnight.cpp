@@ -12,7 +12,7 @@ ACTPKnight::ACTPKnight()
 	FigureScore = 30;
 }
 
-TArray<UCTPBoardPiece*> ACTPKnight::GetAvailableMoves()
+TArray<UCTPBoardPiece*> ACTPKnight::GetAvailableMoves(bool HighlightPieces)
 {
 	TArray<FGridRows> BoardGridOfRows = ChessBoard->GetBoardPieces();
 	TArray<UCTPBoardPiece*> AvailableMoves;
@@ -28,17 +28,28 @@ TArray<UCTPBoardPiece*> ACTPKnight::GetAvailableMoves()
 				if (BoardGridOfRows[PosX[i]][PosY[i]]->GetCurrentFigure()->GetIsWhiteColor() != isWhite)
 				{
 					AvailableMoves.Add(BoardGridOfRows[PosX[i]][PosY[i]]);
-					if (isWhite)
+					if (HighlightPieces)
+					{
 						BoardGridOfRows[PosX[i]][PosY[i]]->EnemyHighlightPiece();
+					}
 				}
 			}
 			else if (BoardGridOfRows[PosX[i]][PosY[i]]->GetCurrentState() == EPieceState::CS_Empty)
 			{
-				if (isWhite)
+				if (HighlightPieces)
+				{
 					BoardGridOfRows[PosX[i]][PosY[i]]->HighlightPiece();
+				}
 				AvailableMoves.Add(BoardGridOfRows[PosX[i]][PosY[i]]);
 			}
 		}
 	}
 	return AvailableMoves;
+}
+
+TArray<UCTPBoardPiece*> ACTPKnight::GetPathTo(UCTPBoardPiece* TargetPiece)
+{
+	TArray<UCTPBoardPiece*> ReturnPieces;
+	ReturnPieces.Add(GetCurrentPiece());
+	return ReturnPieces;
 }

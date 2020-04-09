@@ -11,7 +11,7 @@ void ACTPPlayerController::BeginPlay()
 
 	if(const auto FindedActor = UGameplayStatics::GetActorOfClass(GetWorld(), ACTPBoard::StaticClass()))
 	{
-		CurrentBoard = Cast<ACTPBoard>(FindedActor);
+		GameBoard = Cast<ACTPBoard>(FindedActor);
 	}
 
 	if (const auto FindedGameMode = UGameplayStatics::GetGameMode(GetWorld()))
@@ -24,17 +24,20 @@ void ACTPPlayerController::BeginPlay()
 	}
 }
 
-void ACTPPlayerController::PlayerMove()
-{
+void ACTPPlayerController::PlayerMove(TArray<UCTPBoardPiece*> NewAvailableCheckMoves)
+{	
+	if (NewAvailableCheckMoves.Num())
+	{
+		AvailableCheckMoves = NewAvailableCheckMoves;
+	}
 	bPlayerCanMove = true;
 }
 
 ACTPPlayerController::ACTPPlayerController()
-{	
-	if(!UGameplayStatics::GetPlatformName().Equals("Android"))
-	{
-		bShowMouseCursor = true;						// Show mouse cursor
-	}
+{
+	#if !PLATFORM_ANDROID
+		bShowMouseCursor = true;									
+	#endif
 }
 
 void ACTPPlayerController::SetupInputComponent()
@@ -56,7 +59,15 @@ void ACTPPlayerController::OnLeftMousePressed()
 		{
 			if (CurrentState == EControllerState::CS_Free && SelectedChessFigure->GetIsWhiteColor() && bPlayerCanMove )
 			{
-				AvailableMoves = SelectedChessFigure->GetAvailableMoves();
+				if (ChessGameMode->GetCurrentGameState() == EGameState::GS_Play)
+				{
+					AvailableMoves = SelectedChessFigure->GetAvailableMoves(true);
+				}
+				else
+				{
+					AvailableMoves = SelectedChessFigure->GetAvailableCheckMoves(AvailableCheckMoves, true);
+				}
+				
 				if (AvailableMoves.Num() > 0)
 				{
 					CurrentState = EControllerState::CS_SelectedFigure;
@@ -72,6 +83,7 @@ void ACTPPlayerController::OnLeftMousePressed()
 					{
 						CurrentSelectedFigure->MoveTo(Move);
 						bPlayerCanMove = false;
+						ChessGameMode->SetCurrentGameState(EGameState::GS_Play);
 						ChessGameMode->MoveAI();
 					}
 				}
@@ -99,6 +111,7 @@ void ACTPPlayerController::OnLeftMousePressed()
 						{
 							CurrentSelectedFigure->MoveTo(Move);
 							bPlayerCanMove = false;
+							ChessGameMode->SetCurrentGameState(EGameState::GS_Play);
 							ChessGameMode->MoveAI();
 						}
 					}
